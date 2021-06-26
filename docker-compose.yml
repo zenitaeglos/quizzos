@@ -8,4 +8,21 @@ services:
     - 8004:8000
     volumes:
     - ./apipy:/app/src
+    networks:
+      - quizznetwork
     command: uvicorn apipy.main:app --reload --host 0.0.0.0 --port 8000
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+    - 8104:3000
+    volumes:
+    - /app/node_modules
+    - ./frontend:/app/src
+    networks:
+      - quizznetwork
+    command: bash -c "cd quizzos && npm start"
+
+networks:
+  quizznetwork:
+    name: quizz_network
