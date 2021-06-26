@@ -6,6 +6,10 @@ WORKDIR /app/src
 # copy requirements
 COPY requirements.txt .
 
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 # expose a port to the outside
 EXPOSE 8000
 
