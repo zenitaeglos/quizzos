@@ -21,5 +21,5 @@ app.add_middleware(
 @app.get('/')
 async def main_page():
     return {
-        'title': 'Welcome to Quizzos'
+        'title': 'Welcome to Quizzos with FastApi'
     }

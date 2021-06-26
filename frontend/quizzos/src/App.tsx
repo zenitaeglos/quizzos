@@ -2,11 +2,16 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-interface AppProps{
+interface AppProps {
 }
 
 
-class App extends React.Component<AppProps, { title: string }> {
+interface DisplayProps {
+    title: string
+}
+
+
+class App extends React.Component< AppProps, DisplayProps > {
 
     constructor(props: AppProps) {
         super(props);
@@ -16,16 +21,13 @@ class App extends React.Component<AppProps, { title: string }> {
     }
 
     componentDidMount() {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8004");
-            const titleData = await response.json();
-
+        fetch("http://localhost:8004").then((Response) => {
+            return Response.json();
+        }).then((Response) => {
             this.setState({
-                title: titleData.title
+                title: Response.title
             });
-
-        }
-        fetchData();
+        });
     }
 
     render() {
