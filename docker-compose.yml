@@ -22,6 +22,16 @@ services:
     networks:
       - quizznetwork
     command: bash -c "cd quizzos && npm start"
+  apirust:
+    build:
+      context: ./apirust
+    ports:
+    - 8005:8000
+    volumes:
+    - ./apirust:/app/src
+    networks:
+      - quizznetwork
+    command: "sleep 5000" #bash -c "cd apirust && cargo run"
 
 networks:
   quizznetwork:

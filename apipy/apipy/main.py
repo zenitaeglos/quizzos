@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from .routers import items
 
 app = FastAPI()
+
+app.include_router(items.router)
 
 # cors descriptions
 origins = [
@@ -20,6 +24,9 @@ app.add_middleware(
 
 @app.get('/')
 async def main_page():
+    the_items = items.fake_items
+    the_items.append(items.Item(item_id=4, name="paco"))
     return {
-        'title': 'Welcome to Quizzos with FastApi'
+        'title': 'Welcome to Quizzos with FastApi',
+        'item_list': the_items
     }
