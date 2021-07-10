@@ -8,9 +8,6 @@ export interface Item {
     name: string;
 }
 
-interface AppProps {
-}
-
 
 interface DisplayProps {
     title: string;
@@ -18,9 +15,9 @@ interface DisplayProps {
 }
 
 
-class App extends React.Component< AppProps, DisplayProps > {
+class App extends React.Component< {}, DisplayProps > {
 
-    constructor(props: AppProps) {
+    constructor(props: {}) {
         super(props);
         this.state = {
             title: '',
@@ -29,13 +26,13 @@ class App extends React.Component< AppProps, DisplayProps > {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8004").then((Response) => {
+        fetch("http://localhost:8004/quizzes").then((Response) => {
             return Response.json();
         }).then((Response) => {
             console.log(Response);
             this.setState({
                 title: Response.title,
-                itemsList: Response.item_list
+                itemsList: Response.quiz_list
             });
         });
     }

@@ -5,6 +5,7 @@ from .routers import items
 
 app = FastAPI()
 
+# set routers
 app.include_router(items.router)
 
 # cors descriptions
@@ -27,6 +28,5 @@ async def main_page():
     the_items = items.fake_items
     the_items.append(items.Item(item_id=4, name="paco"))
     return {
-        'title': 'Welcome to Quizzos with FastApi',
-        'item_list': the_items
+        'title': 'Welcome to Quizzos with FastApi'
     }

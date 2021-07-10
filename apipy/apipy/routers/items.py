@@ -2,6 +2,12 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 
+router = APIRouter(
+    prefix="/quizzes",
+    tags=["quizzes"],
+)
+
+
 # list of fake items
 class Item(BaseModel):
     item_id: int
@@ -21,16 +27,20 @@ class Question(BaseModel):
     answer: str
 
 
-router = APIRouter(
-    prefix="/items",
-    tags=["items"],
-)
+question_one = Question(name="question one", question="what color?", answer="blue")
+question_two = Question(name="question two", question="Reallz?", answer="green")
+fake_question_list = [question_one, question_two]
+fake_question_list_two = [question_one, Question(name="asdas", question="tu the", answer="I dont know")]
+
+fake_list_of_quizzes = {"name": "first_quiz", "quiz_questions": fake_question_list}
+fake_list_of_quizzes_two = {"name": "second_quiz", "quiz_questions": fake_question_list_two}
 
 
 @router.get("/")
 async def read_items() -> []:
     return {
-        "item_list": fake_items
+        "name": "name",
+        "quiz_list": [fake_list_of_quizzes, fake_list_of_quizzes_two]
     }
 
 
