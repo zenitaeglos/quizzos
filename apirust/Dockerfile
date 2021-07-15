@@ -5,7 +5,7 @@ WORKDIR /app/src
 
 COPY . .
 
-RUN cargo install --path ./quizzos
+RUN cargo install --path ./apirust
 
 EXPOSE 8000
 
