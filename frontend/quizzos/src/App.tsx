@@ -12,6 +12,7 @@ export interface Item {
 interface DisplayProps {
     title: string;
     itemsList: Array<Item>;
+    token?: string;
 }
 
 
@@ -21,12 +22,19 @@ class App extends React.Component< {}, DisplayProps > {
         super(props);
         this.state = {
             title: '',
-            itemsList: new Array<Item>()
+            itemsList: new Array<Item>(),
+            token: ''
         }
     }
 
     componentDidMount() {
-        fetch("http://localhost:8004/quizzes").then((Response) => {
+        const headers = { 'Authorization': 'Basic YXNkOmFzZA=='};
+        fetch("http://localhost:8005/quizzes/23", {headers}).then((Response) => {
+            /*
+            if not authorised. redirected: false, status: 401, statusText: Unauthorized
+            */
+            console.log("feth");
+            console.log(Response);
             return Response.json();
         }).then((Response) => {
             console.log(Response);
@@ -35,6 +43,26 @@ class App extends React.Component< {}, DisplayProps > {
                 itemsList: Response.quiz_list
             });
         });
+    }
+
+    getQuizzes() {
+        const headers = { 'Authorization': 'Bearer' + this.state.token };
+        fetch("http://localhost:8004/quizzes/", {headers}).then((Response) => {
+            return Response.json();
+        }).then((Response) => {
+            this.setState({
+                itemsList: Response.quiz_list
+            })
+        });
+    }
+
+    getQuiz() {
+        const headers = { 'Authorization': 'Bearer' + this.state.token };
+        fetch("http://localhost:8004/quizzes/1", {headers}).then((Response) => {
+            return Response.json();
+        }).then((Response) => {
+            // do somethings
+        })
     }
 
     render() {

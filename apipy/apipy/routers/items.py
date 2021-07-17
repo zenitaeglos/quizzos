@@ -1,11 +1,22 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordBearer
 
 
 router = APIRouter(
     prefix="/quizzes",
     tags=["quizzes"],
 )
+
+
+# security token
+oauth_scheme = OAuth2PasswordBearer(tokenUrl='token')
+
+
+# fake user
+class User(BaseModel):
+    username: str
+    full_name: str
 
 
 # list of fake items
@@ -36,8 +47,18 @@ fake_list_of_quizzes = {"name": "first_quiz", "quiz_questions": fake_question_li
 fake_list_of_quizzes_two = {"name": "second_quiz", "quiz_questions": fake_question_list_two}
 
 
+async def get_current_user(token: str = Depends(oauth_scheme)):
+    print('THIS is the token')
+    print(token)
+    return User(
+        username="Paco",
+        full_name="Paco paco"
+    )
+
+
 @router.get("/")
-async def read_items() -> []:
+async def read_items(token: str = Depends(get_current_user)) -> []:
+    print(token)
     return {
         "name": "name",
         "quiz_list": [fake_list_of_quizzes, fake_list_of_quizzes_two]

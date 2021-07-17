@@ -1,5 +1,12 @@
-use actix_web::{Result,HttpResponse, web};
+use actix_web::{Result,HttpResponse, web, HttpRequest, Error};
 use serde::{Serialize, Deserialize};
+use actix_web_httpauth::extractors::bearer::BearerAuth;
+use actix_web_httpauth::extractors::basic::BasicAuth;
+use actix_web_httpauth::middleware::HttpAuthentication;
+use actix_web::dev::ServiceRequest;
+use actix_web::error::DispatchError::H2;
+use actix_web::middleware::errhandlers::ErrorHandlerResponse::Future;
+use std::future::Future;
 
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -73,8 +80,18 @@ struct ItemList {
 }
 
 
-pub async fn get_list() -> Result<HttpResponse> {
+// authentication validation
+async fn validator(
+        req: ServiceRequest,
+        credentials: BearerAuth
+        ) -> Result<ServiceRequest, Error> {
+    println!("claro que work");
+    Ok(req)
+}
 
+
+pub async fn get_list(request: HttpRequest) -> Result<HttpResponse> {
+    let request_headers = request.headers();
     // this is only mockup data so far
     let first_question: Question = Question::new(
         "one".to_string(),
@@ -99,7 +116,7 @@ pub async fn get_list() -> Result<HttpResponse> {
     Ok(HttpResponse::Ok().json(quiz_list))
 }
 
-pub async fn get_quiz(web::Path(item_id): web::Path<u32>) -> Result<HttpResponse> {
+pub async fn get_quiz(web::Path(item_id): web::Path<String>) -> Result<HttpResponse> {
     println!("{}", item_id);
     let first_question: Question = Question::new(
         "one".to_string(),
@@ -109,7 +126,7 @@ pub async fn get_quiz(web::Path(item_id): web::Path<u32>) -> Result<HttpResponse
     let second_question: Question = Question::new(
         "two".to_string(),
         "who are you".to_string(),
-        "who knows".to_string(),
+        "who knows what".to_string(),
     );
     let mut first_quiz: Quiz = Quiz::new("first_quiz".to_string());
     first_quiz.push(first_question);
@@ -119,10 +136,12 @@ pub async fn get_quiz(web::Path(item_id): web::Path<u32>) -> Result<HttpResponse
 
 
 pub fn config(cfg: &mut web::ServiceConfig) {
+    let auth = HttpAuthentication::bearer(validator);
+    let auth_item = HttpAuthentication::bearer(validator);
     cfg.service(web::resource("/quizzes")
-        .route(web::get().to(get_list))
+        .route(web::get().to(get_list)).wrap(auth)
     ).service(web::resource("/quizzes/{item_id}")
-        .route(web::get().to(get_quiz))
+        .route(web::get().to(get_quiz)).wrap(auth_item)
     );
 }
 

@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from .routers import items
+from .routers import items, user
 
 app = FastAPI()
 
 # set routers
 app.include_router(items.router)
+app.include_router(user.router)
 
 # cors descriptions
 origins = [
