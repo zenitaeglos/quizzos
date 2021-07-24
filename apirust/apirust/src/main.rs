@@ -4,6 +4,7 @@ use serde::{Serialize, Deserialize};
 
 
 mod items;
+mod user;
 
 
 
@@ -25,6 +26,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         .service(web::resource("")
             .route(web::get().to(index)))
         .configure(items::items::config)
+        .configure(user::user::config)
     );
 }
 

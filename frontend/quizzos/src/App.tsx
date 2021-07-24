@@ -2,6 +2,8 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import ItemsList from './ItemsList';
+import Header from './Header';
+import Login from './Login';
 
 export interface Item {
     item_id: number;
@@ -13,6 +15,7 @@ interface DisplayProps {
     title: string;
     itemsList: Array<Item>;
     token?: string;
+    page: string;
 }
 
 
@@ -23,13 +26,36 @@ class App extends React.Component< {}, DisplayProps > {
         this.state = {
             title: '',
             itemsList: new Array<Item>(),
-            token: ''
+            token: '',
+            page: '',
         }
     }
 
     componentDidMount() {
-        const headers = { 'Authorization': 'Basic YXNkOmFzZA=='};
-        fetch("http://localhost:8005/quizzes/23", {headers}).then((Response) => {
+        const formData = new FormData();
+        formData.append('grant_type', 'password');
+        formData.append('username', 'pato');
+        formData.append('password', 'lebatin');
+        const username = 'pato';
+        const password = '456'
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-type': 'application/x-www-form-urlencoded', 'accept': 'application/json', },
+            //headers: { 'Authorization': 'Bearer YXNkOmFzZA=='},
+            body: 'grant_type=&username=pato&password=lebatin&scope=&client_id=&client_secret='
+        };
+        //const headers = { 'Authorization': 'Bearer YXNkOmFzZA=='};
+        //const headers = { 'Authorization': 'Bearer ' + btoa('username=pato:password=lebation')};
+
+        const headers = {'Content-type': 'application/json'};
+        fetch("http://localhost:8004/user/login", {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'grant_type=&username=pato&password=lebatin&scope=&client_id=&client_secret='
+        }).then((Response) => {
             /*
             if not authorised. redirected: false, status: 401, statusText: Unauthorized
             */
@@ -76,6 +102,7 @@ class App extends React.Component< {}, DisplayProps > {
         }
         return (
             <div>
+                <Header />
                 <h1>{this.state.title}</h1>
                 {component}
             </div>

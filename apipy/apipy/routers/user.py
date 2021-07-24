@@ -18,7 +18,7 @@ fake_db_user = {
 
 
 @router.post('/token')
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+async def logino(form_data: OAuth2PasswordRequestForm = Depends()):
     print(form_data)
     print(form_data.username)
     if form_data.username == 'first_user':
@@ -28,4 +28,16 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     return {
         'access_token': 'nothing',
         'token_type': 'bearer'
+    }
+
+
+@router.post('/login')
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    print(form_data)
+    print("calling login")
+    print(form_data.username)
+    print(form_data.password)
+    return {
+        'token': '123',
+        'as': 'asd'
     }
