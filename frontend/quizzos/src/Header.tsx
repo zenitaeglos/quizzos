@@ -2,13 +2,33 @@ import React from 'react';
 import './App.css';
 
 
-class Header extends React.Component< {}, {} > {
+interface Props {
+    myAction(actionType: string): any;
+};
+
+
+class Header extends React.Component< Props, {} > {
+
+    constructor(props: Props) {
+        super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+
+    handleClick(actionType: string) {
+        console.log("handleClick");
+        this.props.myAction(actionType);
+    }
 
     render() {
         return (
             <div>
                 <span>Hola</span>
-                <button>Login</button>
+                <button
+                    onClick={ () => this.handleClick("login") }
+                    >Login
+                </button>
             </div>
         )
     }

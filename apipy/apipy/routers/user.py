@@ -37,6 +37,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     print("calling login")
     print(form_data.username)
     print(form_data.password)
+    if form_data.username == "duck" and form_data.password == "dock":
+        return {
+            'token': '123',
+            'login': 'succesfull'
+        }
     return {
         'token': '123',
         'as': 'asd'

@@ -16,6 +16,7 @@ interface DisplayProps {
     itemsList: Array<Item>;
     token?: string;
     page: string;
+    actionType: string;
 }
 
 
@@ -28,7 +29,10 @@ class App extends React.Component< {}, DisplayProps > {
             itemsList: new Array<Item>(),
             token: '',
             page: '',
+            actionType: '',
         }
+
+        this.myAction = this.myAction.bind(this);
     }
 
     componentDidMount() {
@@ -91,8 +95,52 @@ class App extends React.Component< {}, DisplayProps > {
         })
     }
 
+    myAction(actionType: string) {
+        console.log(actionType);
+        this.setState({
+            actionType: actionType
+        });
+    }
+
+    setComponent() {
+        switch(this.state.actionType) {
+        case "login":
+        return <Login
+            logInDataAccount={ (login, password) => this.logInDataAccount(login, password) }
+         />
+            default:
+                return null;
+        }
+    }
+
+    logInDataAccount(login: string, password: string) {
+        console.log("log in");
+        console.log(login);
+        console.log(password);
+        fetch("http://localhost:8004/user/login", {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'grant_type=&username=' + login + '&password=' + password + '&scope=&client_id=&client_secret='
+        }).then((Response) => {
+            console.log("poh claro");
+            console.log(Response);
+
+            return Response.json();
+        }).then((Response) => {
+            console.log(Response);
+        });
+    }
+
+
+
     render() {
-        let component = null;
+        let component = this.setComponent();
+
+
+        /*
         if (this.state.itemsList && this.state.itemsList.length > 0) {
             console.log("there is a list");
             console.log(this.state);
@@ -100,9 +148,12 @@ class App extends React.Component< {}, DisplayProps > {
                             items={this.state.itemsList}
                         />
         }
+        */
         return (
             <div>
-                <Header />
+                <Header
+                    myAction={ this.myAction }
+                 />
                 <h1>{this.state.title}</h1>
                 {component}
             </div>
