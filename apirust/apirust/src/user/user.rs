@@ -26,10 +26,11 @@ async fn login_auth(
 
 
 
-pub async fn login() -> Result<HttpResponse> {
-    //println!("{}", login.username);
+pub async fn login(form: web::Form<Login>) -> Result<HttpResponse> {
+    println!("login from rust");
+    println!("{}", form.username);
     //println!("{}", login.password);
-    Ok(HttpResponse::Ok().json("{one: two}"))
+    Ok(HttpResponse::Ok().json("{onehundres: two}"))
 }
 
 
